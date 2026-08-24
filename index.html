@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -272,7 +271,7 @@ function renderSongs() {
       <input
         type="checkbox"
         data-index="${index}"
-        onchange="updateTotal()"
+        onchange="handleSelection(this)"
       >
 
       <span class="song-title">
@@ -290,7 +289,20 @@ function renderSongs() {
 
 }
 
+let selectionOrder = [];
+  function handleSelection(box) {
+  const index = Number(box.dataset.index);
 
+  if (box.checked) {
+    if (!selectionOrder.includes(index)) {
+      selectionOrder.push(index);
+    }
+  } else {
+    selectionOrder = selectionOrder.filter(item => item !== index);
+  }
+
+  updateTotal();
+}
 function updateTotal() {
 
   const checkboxes =
@@ -342,40 +354,26 @@ function clearSetlist() {
   const checkboxes =
     document.querySelectorAll('input[type="checkbox"]');
 
-  checkboxes.forEach(box => {
+    checkboxes.forEach(box => {
     box.checked = false;
   });
 
+  selectionOrder = [];
   updateTotal();
 
-}
+ }
 
 
-function copySetlist() {
+function copySetlist() 
+const selectedSongs = selectionOrder.map(index => songs[index]);
 
-  const checkboxes =
-    document.querySelectorAll('input[type="checkbox"]');
+let totalSeconds = 0;
 
-  const selectedSongs = [];
-
-  let totalSeconds = 0;
-
-
-  checkboxes.forEach(box => {
-
-    if (box.checked) {
-
-      const song =
-        songs[Number(box.dataset.index)];
-
-      selectedSongs.push(song);
-
-      totalSeconds +=
-        timeToSeconds(song.duration);
-
-    }
-
-  });
+selectedSongs.forEach(song => {
+  totalSeconds += timeToSeconds(song.duration);
+});
+  
+  
 
 
   if (selectedSongs.length === 0) {
