@@ -1,4 +1,6 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,14 +41,15 @@
       flex-wrap: wrap;
     }
 
-    .brand h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: 2px;
+    .brand img {
+      width: 320px;
+      max-width: 100%;
+      height: auto;
+      display: block;
     }
 
     .brand p {
-      margin: 5px 0 0;
+      margin: 12px 0 0;
       color: #999;
     }
 
@@ -104,10 +107,17 @@
       padding: 25px 20px 60px;
     }
 
+    .section-title {
+      color: #888;
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin: 5px 0 18px;
+    }
+
     .song {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
       background: #111;
       border: 1px solid #292929;
       border-radius: 12px;
@@ -123,7 +133,7 @@
     }
 
     .song.selected {
-      border-color: #aaa;
+      border-color: #777;
       background: #181818;
     }
 
@@ -131,6 +141,34 @@
       width: 22px;
       height: 22px;
       cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .order-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      font-size: 15px;
+      font-weight: bold;
+
+      background: #222;
+      border: 1px solid #444;
+      color: #777;
+
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .order-badge.active {
+      opacity: 1;
+      background: #eee;
+      color: #111;
+      border-color: #eee;
     }
 
     .song-title {
@@ -143,18 +181,21 @@
       font-family: monospace;
       font-size: 16px;
       color: #bbb;
-    }
-
-    .section-title {
-      color: #888;
-      font-size: 13px;
-      letter-spacing: 2px;
-      margin: 5px 0 18px;
+      flex-shrink: 0;
     }
 
     @media (max-width: 600px) {
+
+      header {
+        position: relative;
+      }
+
       .top {
         display: block;
+      }
+
+      .brand img {
+        width: 280px;
       }
 
       .counter {
@@ -170,44 +211,89 @@
         flex-direction: column;
       }
 
+      .song {
+        gap: 10px;
+        padding: 15px;
+      }
+
       .song-title {
         font-size: 16px;
+      }
+
+      .order-badge {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+      }
+
+      .duration {
+        font-size: 14px;
       }
     }
   </style>
 </head>
 
+
 <body>
 
 <header>
+
   <div class="header-content">
 
     <div class="top">
 
       <div class="brand">
-        <img src="oldskull-logo.png" alt="Oldsküll Heavy Metal Tribute Band" style="width: 320px; max-width: 100%; height: auto;">
+
+        <img
+          src="oldskull-logo.png"
+          alt="Oldsküll Heavy Metal Tribute Band"
+        >
+
         <p>Setlist Builder • Manowar Tribute</p>
+
       </div>
 
+
       <div class="counter">
-        <div id="trackCount">0 DE 17 FAIXAS</div>
-        <div id="totalTime">0h 00m 00s</div>
+
+        <div id="trackCount">
+          0 DE 17 FAIXAS
+        </div>
+
+        <div id="totalTime">
+          0h 00m 00s
+        </div>
+
       </div>
 
     </div>
 
+
     <div class="buttons">
-      <button onclick="clearSetlist()">🗑 Limpar</button>
-      <button id="copyButton" onclick="copySetlist()">📋 Copiar Setlist</button>
+
+      <button onclick="clearSetlist()">
+        🗑 Limpar
+      </button>
+
+      <button
+        id="copyButton"
+        onclick="copySetlist()"
+      >
+        📋 Copiar Setlist
+      </button>
+
     </div>
 
   </div>
+
 </header>
 
 
 <main>
 
-  <div class="section-title">OLDSKÜLL — MANOWAR SETLIST</div>
+  <div class="section-title">
+    OLDSKÜLL — MANOWAR SETLIST
+  </div>
 
   <div id="songList"></div>
 
@@ -217,62 +303,178 @@
 <script>
 
 const songs = [
-  { title: "Fighting the World", duration: "3:51" },
-  { title: "The Gods Made Heavy Metal", duration: "6:04" },
-  { title: "Kings of Metal", duration: "3:44" },
-  { title: "Kingdom Come", duration: "3:57" },
-  { title: "Wheels of Fire", duration: "4:11" },
-  { title: "Battle Hymn", duration: "6:59" },
-  { title: "Brothers of Metal (Part 1)", duration: "3:55" },
-  { title: "Metal Warriors", duration: "3:55" },
-  { title: "Hail and Kill", duration: "5:58" },
-  { title: "Heart of Steel", duration: "5:11" },
-  { title: "Holy War", duration: "4:45" },
-  { title: "Carry On", duration: "4:13" },
-  { title: "Kill with Power", duration: "3:58" },
-  { title: "Blood of the Kings", duration: "7:30" },
-  { title: "Blood of My Enemies", duration: "4:16" },
-  { title: "Manowar", duration: "3:37" },
-  { title: "Black Wind, Fire and Steel", duration: "5:16" }
+
+  {
+    title: "Fighting the World",
+    duration: "3:51"
+  },
+
+  {
+    title: "The Gods Made Heavy Metal",
+    duration: "6:04"
+  },
+
+  {
+    title: "Kings of Metal",
+    duration: "3:44"
+  },
+
+  {
+    title: "Kingdom Come",
+    duration: "3:57"
+  },
+
+  {
+    title: "Wheels of Fire",
+    duration: "4:11"
+  },
+
+  {
+    title: "Battle Hymn",
+    duration: "6:59"
+  },
+
+  {
+    title: "Brothers of Metal (Part 1)",
+    duration: "3:55"
+  },
+
+  {
+    title: "Metal Warriors",
+    duration: "3:55"
+  },
+
+  {
+    title: "Hail and Kill",
+    duration: "5:58"
+  },
+
+  {
+    title: "Heart of Steel",
+    duration: "5:11"
+  },
+
+  {
+    title: "Holy War",
+    duration: "4:45"
+  },
+
+  {
+    title: "Carry On",
+    duration: "4:13"
+  },
+
+  {
+    title: "Kill with Power",
+    duration: "3:58"
+  },
+
+  {
+    title: "Blood of the Kings",
+    duration: "7:30"
+  },
+
+  {
+    title: "Blood of My Enemies",
+    duration: "4:16"
+  },
+
+  {
+    title: "Manowar",
+    duration: "3:37"
+  },
+
+  {
+    title: "Black Wind, Fire and Steel",
+    duration: "5:16"
+  }
+
 ];
 
 
+let selectionOrder = [];
+
+
+/* ================================
+   CONVERSÃO DE TEMPO
+================================ */
+
 function timeToSeconds(time) {
+
   const parts = time.split(":");
-  return Number(parts[0]) * 60 + Number(parts[1]);
+
+  return (
+    Number(parts[0]) * 60 +
+    Number(parts[1])
+  );
+
 }
 
+
+/* ================================
+   FORMATAÇÃO DO TEMPO
+================================ */
 
 function formatTime(totalSeconds) {
 
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
+  const hours =
+    Math.floor(totalSeconds / 3600);
+
+  const minutes =
+    Math.floor(
+      (totalSeconds % 3600) / 60
+    );
+
+  const seconds =
+    totalSeconds % 60;
+
 
   return (
-    hours + "h " +
-    String(minutes).padStart(2, "0") + "m " +
-    String(seconds).padStart(2, "0") + "s"
+    hours +
+    "h " +
+    String(minutes).padStart(2, "0") +
+    "m " +
+    String(seconds).padStart(2, "0") +
+    "s"
   );
+
 }
 
 
+/* ================================
+   CRIAÇÃO DA LISTA DE MÚSICAS
+================================ */
+
 function renderSongs() {
 
-  const list = document.getElementById("songList");
+  const list =
+    document.getElementById("songList");
+
+
+  list.innerHTML = "";
+
 
   songs.forEach((song, index) => {
 
-    const item = document.createElement("label");
+    const item =
+      document.createElement("label");
+
 
     item.className = "song";
 
+
     item.innerHTML = `
+
       <input
         type="checkbox"
         data-index="${index}"
         onchange="handleSelection(this)"
       >
+
+      <span
+        class="order-badge"
+        data-order="${index}"
+      ></span>
 
       <span class="song-title">
         ${song.title}
@@ -281,7 +483,9 @@ function renderSongs() {
       <span class="duration">
         ${song.duration}
       </span>
+
     `;
+
 
     list.appendChild(item);
 
@@ -289,34 +493,115 @@ function renderSongs() {
 
 }
 
-let selectionOrder = [];
-  function handleSelection(box) {
-  const index = Number(box.dataset.index);
+
+/* ================================
+   CLIQUE / ORDEM DO SETLIST
+================================ */
+
+function handleSelection(box) {
+
+  const index =
+    Number(box.dataset.index);
+
 
   if (box.checked) {
+
     if (!selectionOrder.includes(index)) {
+
       selectionOrder.push(index);
+
     }
+
   } else {
-    selectionOrder = selectionOrder.filter(item => item !== index);
+
+    selectionOrder =
+      selectionOrder.filter(
+        item => item !== index
+      );
+
   }
 
+
+  updateSelectionNumbers();
+
   updateTotal();
+
 }
+
+
+/* ================================
+   NUMERAÇÃO VISUAL
+================================ */
+
+function updateSelectionNumbers() {
+
+  const badges =
+    document.querySelectorAll(
+      ".order-badge"
+    );
+
+
+  badges.forEach(badge => {
+
+    badge.textContent = "";
+
+    badge.classList.remove("active");
+
+  });
+
+
+  selectionOrder.forEach(
+    (songIndex, position) => {
+
+      const badge =
+        document.querySelector(
+          `[data-order="${songIndex}"]`
+        );
+
+
+      if (badge) {
+
+        badge.textContent =
+          position + 1;
+
+        badge.classList.add("active");
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================================
+   CÁLCULO DO TEMPO TOTAL
+================================ */
+
 function updateTotal() {
 
   const checkboxes =
-    document.querySelectorAll('input[type="checkbox"]');
+    document.querySelectorAll(
+      'input[type="checkbox"]'
+    );
+
 
   let totalSeconds = 0;
+
   let selectedCount = 0;
+
 
   checkboxes.forEach(box => {
 
-    const song =
-      songs[Number(box.dataset.index)];
+    const songIndex =
+      Number(box.dataset.index);
 
-    const row = box.closest(".song");
+    const song =
+      songs[songIndex];
+
+    const row =
+      box.closest(".song");
+
 
     if (box.checked) {
 
@@ -336,70 +621,103 @@ function updateTotal() {
   });
 
 
-  document.getElementById("trackCount").textContent =
-    selectedCount +
-    " DE " +
-    songs.length +
-    " FAIXAS";
+  document
+    .getElementById("trackCount")
+    .textContent =
+      selectedCount +
+      " DE " +
+      songs.length +
+      " FAIXAS";
 
 
-  document.getElementById("totalTime").textContent =
-    formatTime(totalSeconds);
+  document
+    .getElementById("totalTime")
+    .textContent =
+      formatTime(totalSeconds);
 
 }
 
 
+/* ================================
+   LIMPAR SETLIST
+================================ */
+
 function clearSetlist() {
 
   const checkboxes =
-    document.querySelectorAll('input[type="checkbox"]');
+    document.querySelectorAll(
+      'input[type="checkbox"]'
+    );
 
-    checkboxes.forEach(box => {
+
+  checkboxes.forEach(box => {
+
     box.checked = false;
+
   });
 
+
   selectionOrder = [];
+
+
+  updateSelectionNumbers();
+
   updateTotal();
 
- }
+}
 
+
+/* ================================
+   COPIAR SETLIST
+================================ */
 
 function copySetlist() {
-const selectedSongs = selectionOrder.map(index => songs[index]);
 
-let totalSeconds = 0;
+  if (selectionOrder.length === 0) {
 
-selectedSongs.forEach(song => {
-  totalSeconds += timeToSeconds(song.duration);
-});
-  
-  
-
-
-  if (selectedSongs.length === 0) {
-
-    alert("Selecione pelo menos uma música.");
+    alert(
+      "Selecione pelo menos uma música."
+    );
 
     return;
 
   }
 
 
+  const selectedSongs =
+    selectionOrder.map(
+      index => songs[index]
+    );
+
+
+  let totalSeconds = 0;
+
+
+  selectedSongs.forEach(song => {
+
+    totalSeconds +=
+      timeToSeconds(song.duration);
+
+  });
+
+
   let text =
     "OLDSKÜLL — SETLIST\n\n";
 
 
-  selectedSongs.forEach((song, index) => {
+  selectedSongs.forEach(
+    (song, index) => {
 
-    text +=
-      (index + 1) +
-      ". " +
-      song.title +
-      " — " +
-      song.duration +
-      "\n";
+      text +=
+        (index + 1) +
+        ". " +
+        song.title +
+        " — " +
+        song.duration +
+        "\n";
 
-  });
+    }
+  );
 
 
   text +=
@@ -407,17 +725,23 @@ selectedSongs.forEach(song => {
     formatTime(totalSeconds);
 
 
-  navigator.clipboard.writeText(text)
+  navigator.clipboard
+    .writeText(text)
     .then(() => {
 
       const button =
-        document.getElementById("copyButton");
+        document.getElementById(
+          "copyButton"
+        );
+
 
       const originalText =
         button.textContent;
 
+
       button.textContent =
         "✓ Setlist copiado!";
+
 
       setTimeout(() => {
 
@@ -426,14 +750,28 @@ selectedSongs.forEach(song => {
 
       }, 1500);
 
+    })
+    .catch(() => {
+
+      alert(
+        "Não foi possível copiar automaticamente."
+      );
+
     });
 
 }
 
 
+/* ================================
+   INICIALIZAÇÃO
+================================ */
+
 renderSongs();
+
+updateTotal();
 
 </script>
 
 </body>
+
 </html>
