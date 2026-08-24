@@ -117,7 +117,7 @@
     .song {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       background: #111;
       border: 1px solid #292929;
       border-radius: 12px;
@@ -152,20 +152,19 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-
       font-size: 15px;
       font-weight: bold;
-
       background: #222;
       border: 1px solid #444;
       color: #777;
-
       opacity: 0;
+      transform: scale(0.85);
       transition: 0.2s;
     }
 
     .order-badge.active {
       opacity: 1;
+      transform: scale(1);
       background: #eee;
       color: #111;
       border-color: #eee;
@@ -233,41 +232,28 @@
   </style>
 </head>
 
-
 <body>
 
 <header>
-
   <div class="header-content">
 
     <div class="top">
 
       <div class="brand">
-
         <img
           src="oldskull-logo.png"
           alt="Oldsküll Heavy Metal Tribute Band"
         >
 
         <p>Setlist Builder • Manowar Tribute</p>
-
       </div>
 
-
       <div class="counter">
-
-        <div id="trackCount">
-          0 DE 17 FAIXAS
-        </div>
-
-        <div id="totalTime">
-          0h 00m 00s
-        </div>
-
+        <div id="trackCount">0 DE 17 FAIXAS</div>
+        <div id="totalTime">0h 00m 00s</div>
       </div>
 
     </div>
-
 
     <div class="buttons">
 
@@ -285,9 +271,7 @@
     </div>
 
   </div>
-
 </header>
-
 
 <main>
 
@@ -299,124 +283,40 @@
 
 </main>
 
-
 <script>
 
 const songs = [
-
-  {
-    title: "Fighting the World",
-    duration: "3:51"
-  },
-
-  {
-    title: "The Gods Made Heavy Metal",
-    duration: "6:04"
-  },
-
-  {
-    title: "Kings of Metal",
-    duration: "3:44"
-  },
-
-  {
-    title: "Kingdom Come",
-    duration: "3:57"
-  },
-
-  {
-    title: "Wheels of Fire",
-    duration: "4:11"
-  },
-
-  {
-    title: "Battle Hymn",
-    duration: "6:59"
-  },
-
-  {
-    title: "Brothers of Metal (Part 1)",
-    duration: "3:55"
-  },
-
-  {
-    title: "Metal Warriors",
-    duration: "3:55"
-  },
-
-  {
-    title: "Hail and Kill",
-    duration: "5:58"
-  },
-
-  {
-    title: "Heart of Steel",
-    duration: "5:11"
-  },
-
-  {
-    title: "Holy War",
-    duration: "4:45"
-  },
-
-  {
-    title: "Carry On",
-    duration: "4:13"
-  },
-
-  {
-    title: "Kill with Power",
-    duration: "3:58"
-  },
-
-  {
-    title: "Blood of the Kings",
-    duration: "7:30"
-  },
-
-  {
-    title: "Blood of My Enemies",
-    duration: "4:16"
-  },
-
-  {
-    title: "Manowar",
-    duration: "3:37"
-  },
-
-  {
-    title: "Black Wind, Fire and Steel",
-    duration: "5:16"
-  }
-
+  { title: "Fighting the World", duration: "3:51" },
+  { title: "The Gods Made Heavy Metal", duration: "6:04" },
+  { title: "Kings of Metal", duration: "3:44" },
+  { title: "Kingdom Come", duration: "3:57" },
+  { title: "Wheels of Fire", duration: "4:11" },
+  { title: "Battle Hymn", duration: "6:59" },
+  { title: "Brothers of Metal (Part 1)", duration: "3:55" },
+  { title: "Metal Warriors", duration: "3:55" },
+  { title: "Hail and Kill", duration: "5:58" },
+  { title: "Heart of Steel", duration: "5:11" },
+  { title: "Holy War", duration: "4:45" },
+  { title: "Carry On", duration: "4:13" },
+  { title: "Kill with Power", duration: "3:58" },
+  { title: "Blood of the Kings", duration: "7:30" },
+  { title: "Blood of My Enemies", duration: "4:16" },
+  { title: "Manowar", duration: "3:37" },
+  { title: "Black Wind, Fire and Steel", duration: "5:16" }
 ];
-
 
 let selectionOrder = [];
 
-
-/* ================================
-   CONVERSÃO DE TEMPO
-================================ */
-
 function timeToSeconds(time) {
-
   const parts = time.split(":");
 
   return (
     Number(parts[0]) * 60 +
     Number(parts[1])
   );
-
 }
 
-
-/* ================================
-   FORMATAÇÃO DO TEMPO
-================================ */
-
 function formatTime(totalSeconds) {
-
   const hours =
     Math.floor(totalSeconds / 3600);
 
@@ -428,7 +328,6 @@ function formatTime(totalSeconds) {
   const seconds =
     totalSeconds % 60;
 
-
   return (
     hours +
     "h " +
@@ -437,34 +336,21 @@ function formatTime(totalSeconds) {
     String(seconds).padStart(2, "0") +
     "s"
   );
-
 }
 
-
-/* ================================
-   CRIAÇÃO DA LISTA DE MÚSICAS
-================================ */
-
 function renderSongs() {
-
   const list =
     document.getElementById("songList");
 
-
   list.innerHTML = "";
 
-
   songs.forEach((song, index) => {
-
     const item =
       document.createElement("label");
 
-
     item.className = "song";
 
-
     item.innerHTML = `
-
       <input
         type="checkbox"
         data-index="${index}"
@@ -483,33 +369,20 @@ function renderSongs() {
       <span class="duration">
         ${song.duration}
       </span>
-
     `;
 
-
     list.appendChild(item);
-
   });
-
 }
 
-
-/* ================================
-   CLIQUE / ORDEM DO SETLIST
-================================ */
-
 function handleSelection(box) {
-
   const index =
     Number(box.dataset.index);
-
 
   if (box.checked) {
 
     if (!selectionOrder.includes(index)) {
-
       selectionOrder.push(index);
-
     }
 
   } else {
@@ -521,34 +394,20 @@ function handleSelection(box) {
 
   }
 
-
   updateSelectionNumbers();
-
   updateTotal();
-
 }
 
-
-/* ================================
-   NUMERAÇÃO VISUAL
-================================ */
-
 function updateSelectionNumbers() {
-
   const badges =
     document.querySelectorAll(
       ".order-badge"
     );
 
-
   badges.forEach(badge => {
-
     badge.textContent = "";
-
     badge.classList.remove("active");
-
   });
-
 
   selectionOrder.forEach(
     (songIndex, position) => {
@@ -558,38 +417,25 @@ function updateSelectionNumbers() {
           `[data-order="${songIndex}"]`
         );
 
-
       if (badge) {
-
         badge.textContent =
           position + 1;
 
         badge.classList.add("active");
-
       }
 
     }
   );
-
 }
 
-
-/* ================================
-   CÁLCULO DO TEMPO TOTAL
-================================ */
-
 function updateTotal() {
-
   const checkboxes =
     document.querySelectorAll(
       'input[type="checkbox"]'
     );
 
-
   let totalSeconds = 0;
-
   let selectedCount = 0;
-
 
   checkboxes.forEach(box => {
 
@@ -601,7 +447,6 @@ function updateTotal() {
 
     const row =
       box.closest(".song");
-
 
     if (box.checked) {
 
@@ -620,7 +465,6 @@ function updateTotal() {
 
   });
 
-
   document
     .getElementById("trackCount")
     .textContent =
@@ -629,47 +473,27 @@ function updateTotal() {
       songs.length +
       " FAIXAS";
 
-
   document
     .getElementById("totalTime")
     .textContent =
       formatTime(totalSeconds);
-
 }
 
-
-/* ================================
-   LIMPAR SETLIST
-================================ */
-
 function clearSetlist() {
-
   const checkboxes =
     document.querySelectorAll(
       'input[type="checkbox"]'
     );
 
-
   checkboxes.forEach(box => {
-
     box.checked = false;
-
   });
-
 
   selectionOrder = [];
 
-
   updateSelectionNumbers();
-
   updateTotal();
-
 }
-
-
-/* ================================
-   COPIAR SETLIST
-================================ */
 
 function copySetlist() {
 
@@ -680,30 +504,22 @@ function copySetlist() {
     );
 
     return;
-
   }
-
 
   const selectedSongs =
     selectionOrder.map(
       index => songs[index]
     );
 
-
   let totalSeconds = 0;
 
-
   selectedSongs.forEach(song => {
-
     totalSeconds +=
       timeToSeconds(song.duration);
-
   });
-
 
   let text =
     "OLDSKÜLL — SETLIST\n\n";
-
 
   selectedSongs.forEach(
     (song, index) => {
@@ -719,11 +535,9 @@ function copySetlist() {
     }
   );
 
-
   text +=
     "\nTEMPO TOTAL: " +
     formatTime(totalSeconds);
-
 
   navigator.clipboard
     .writeText(text)
@@ -734,20 +548,15 @@ function copySetlist() {
           "copyButton"
         );
 
-
       const originalText =
         button.textContent;
-
 
       button.textContent =
         "✓ Setlist copiado!";
 
-
       setTimeout(() => {
-
         button.textContent =
           originalText;
-
       }, 1500);
 
     })
@@ -758,16 +567,9 @@ function copySetlist() {
       );
 
     });
-
 }
 
-
-/* ================================
-   INICIALIZAÇÃO
-================================ */
-
 renderSongs();
-
 updateTotal();
 
 </script>
