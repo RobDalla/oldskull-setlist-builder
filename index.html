@@ -1,895 +1,525 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oldsküll Setlist Builder</title>
 
-
   <style>
-
     * {
       box-sizing: border-box;
     }
-
 
     html {
       scroll-behavior: smooth;
     }
 
-
     body {
       margin: 0;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      background: #080808;
-
-      color: #f2f2f2;
-
       min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #080808;
+      color: #f2f2f2;
     }
-
-
-    /*
-    ========================================
-    FUNDO MANOWAR
-    ========================================
-    */
 
     body::before {
-
       content: "";
-
       position: fixed;
-
       inset: 0;
-
       pointer-events: none;
-
       z-index: -2;
-
       opacity: 0;
-
-      transition:
-        opacity 0.35s ease;
-
+      transition: opacity 0.35s ease;
       background-size: cover;
-
-      background-position:
-        center 25%;
-
+      background-position: center 25%;
       background-repeat: no-repeat;
-
     }
 
-
     body.manowar-mode::before {
-
       opacity: 1;
-
       background-image:
         linear-gradient(
           rgba(0, 0, 0, 0.82),
           rgba(0, 0, 0, 0.93)
         ),
         url("oldskull-manowar.jpeg");
-
     }
-
 
     body.manowar-mode {
-
       background: #050505;
-
     }
-
-
-    /*
-    ========================================
-    CABEÇALHO
-    ========================================
-    */
 
     header {
-
-      background:
-        rgba(17, 17, 17, 0.97);
-
-      border-bottom:
-        1px solid #444;
-
-      padding:
-        24px 20px;
-
+      background: rgba(17, 17, 17, 0.97);
+      border-bottom: 1px solid #444;
+      padding: 24px 20px;
       position: sticky;
-
       top: 0;
-
       z-index: 20;
-
-      backdrop-filter:
-        blur(8px);
-
+      backdrop-filter: blur(8px);
     }
-
 
     .header-content {
-
       max-width: 1050px;
-
       margin: auto;
-
     }
-
 
     .top {
-
       display: flex;
-
-      justify-content:
-        space-between;
-
+      justify-content: space-between;
       align-items: center;
-
       gap: 30px;
-
       flex-wrap: wrap;
-
     }
-
-
-    /*
-    ========================================
-    LOGO
-    ========================================
-    */
 
     .brand img {
-
       width: 320px;
-
       max-width: 100%;
-
       height: auto;
-
       display: block;
-
     }
-
 
     .brand p {
-
-      margin:
-        12px 0 0;
-
+      margin: 12px 0 0;
       color: #999;
-
       font-size: 15px;
-
     }
 
-
-    #modeSubtitle {
-
-      transition:
-        color 0.25s ease;
-
-    }
-
-
-    body.manowar-mode
-    #modeSubtitle {
-
+    body.manowar-mode #modeSubtitle {
       color: #c9b36e;
-
     }
-
-
-    /*
-    ========================================
-    CONTADOR
-    ========================================
-    */
 
     .counter {
-
       text-align: right;
-
       min-width: 190px;
-
     }
-
 
     #trackCount {
-
       color: #aaa;
-
       font-weight: bold;
-
       font-size: 14px;
-
     }
-
 
     #totalTime {
-
       font-size: 36px;
-
       font-weight: bold;
-
       margin-top: 5px;
-
       white-space: nowrap;
-
     }
-
-
-    /*
-    ========================================
-    SELETOR DE REPERTÓRIO
-    ========================================
-    */
 
     .mode-area {
-
       margin-top: 22px;
-
     }
-
 
     .mode-label {
-
       color: #777;
-
       font-size: 12px;
-
       font-weight: bold;
-
       letter-spacing: 2px;
-
       margin-bottom: 9px;
-
     }
-
 
     .mode-buttons {
-
       display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
-
     }
-
 
     .mode-button {
-
-      padding:
-        13px 16px;
-
+      padding: 13px 16px;
       border-radius: 9px;
-
-      border:
-        1px solid #444;
-
-      background:
-        #171717;
-
+      border: 1px solid #444;
+      background: #171717;
       color: #aaa;
-
       font-weight: bold;
-
       cursor: pointer;
-
-      transition:
-        0.2s;
-
+      transition: 0.2s;
     }
-
 
     .mode-button:hover {
-
       border-color: #777;
-
       color: #fff;
-
     }
-
 
     .mode-button.active {
-
       background: #eee;
-
       border-color: #eee;
-
       color: #111;
-
     }
 
-
-    body.manowar-mode
-    #manowarModeButton.active {
-
+    body.manowar-mode #manowarModeButton.active {
       background: #6f0909;
-
       border-color: #a61a1a;
-
       color: #fff;
-
-      box-shadow:
-        0 0 18px
-        rgba(180, 20, 20, 0.22);
-
+      box-shadow: 0 0 18px rgba(180, 20, 20, 0.22);
     }
-
-
-    /*
-    ========================================
-    BOTÕES PRINCIPAIS
-    ========================================
-    */
 
     .buttons {
-
       display: flex;
-
       gap: 12px;
-
       margin-top: 14px;
-
     }
-
 
     .action-button {
-
       flex: 1;
-
       padding: 14px;
-
       border-radius: 8px;
-
-      border:
-        1px solid #555;
-
+      border: 1px solid #555;
       background: #1b1b1b;
-
       color: white;
-
       font-size: 16px;
-
       font-weight: bold;
-
       cursor: pointer;
-
-      transition:
-        0.2s;
-
+      transition: 0.2s;
     }
-
 
     .action-button:hover {
-
       background: #292929;
-
     }
 
-
     #copyButton {
-
       background: #eee;
-
       color: #111;
-
       border-color: #eee;
-
     }
 
-
     #copyButton:hover {
-
       background: white;
-
     }
 
-
-    body.manowar-mode
-    #copyButton {
-
+    body.manowar-mode #copyButton {
       background: #7c0c0c;
-
       border-color: #a71d1d;
-
       color: white;
-
     }
 
-
-    body.manowar-mode
-    #copyButton:hover {
-
+    body.manowar-mode #copyButton:hover {
       background: #981515;
-
     }
-
-
-    /*
-    ========================================
-    CONTEÚDO
-    ========================================
-    */
 
     main {
-
       max-width: 1050px;
-
       margin: auto;
-
-      padding:
-        28px 20px 70px;
-
+      padding: 28px 20px 70px;
     }
-
 
     .section-header {
-
       display: flex;
-
-      justify-content:
-        space-between;
-
-      align-items:
-        center;
-
+      justify-content: space-between;
+      align-items: center;
       gap: 20px;
-
       margin-bottom: 18px;
-
     }
-
 
     .section-title {
-
       color: #999;
-
       font-size: 14px;
-
       font-weight: bold;
-
       letter-spacing: 2px;
-
     }
-
 
     .section-hint {
-
       color: #666;
-
       font-size: 12px;
-
       text-align: right;
-
     }
 
-
-    body.manowar-mode
-    .section-title {
-
+    body.manowar-mode .section-title {
       color: #c9b36e;
-
     }
-
-
-    /*
-    ========================================
-    MÚSICAS
-    ========================================
-    */
 
     .song {
-
       display: flex;
-
       align-items: center;
-
       gap: 14px;
-
-      background:
-        rgba(17, 17, 17, 0.94);
-
-      border:
-        1px solid #292929;
-
+      background: rgba(17, 17, 17, 0.94);
+      border: 1px solid #292929;
       border-radius: 12px;
-
       padding: 16px;
-
       margin-bottom: 11px;
-
       cursor: pointer;
-
-      transition:
-        0.2s;
-
-      backdrop-filter:
-        blur(4px);
-
+      transition: 0.2s;
+      backdrop-filter: blur(4px);
     }
-
 
     .song:hover {
-
       border-color: #666;
-
-      transform:
-        translateY(-1px);
-
+      transform: translateY(-1px);
     }
 
-
     .song.selected {
-
       border-color: #777;
-
-      background:
-        rgba(27, 27, 27, 0.97);
-
+      background: rgba(27, 27, 27, 0.97);
     }
 
-
-    body.manowar-mode
-    .song.selected {
-
+    body.manowar-mode .song.selected {
       border-color: #7a2929;
-
-      background:
-        rgba(37, 12, 12, 0.95);
-
+      background: rgba(37, 12, 12, 0.95);
     }
 
-
-    /*
-    ========================================
-    CHECKBOX
-    ========================================
-    */
-
     .song input {
-
       width: 22px;
-
       height: 22px;
-
       cursor: pointer;
-
       flex-shrink: 0;
-
       accent-color: #ddd;
-
     }
 
-
-    body.manowar-mode
-    .song input {
-
+    body.manowar-mode .song input {
       accent-color: #a30f0f;
-
     }
-
-
-    /*
-    ========================================
-    NÚMERO DA ORDEM
-    ========================================
-    */
 
     .order-badge {
-
       width: 34px;
-
       height: 34px;
-
       border-radius: 50%;
-
       display: flex;
-
       align-items: center;
-
       justify-content: center;
-
       flex-shrink: 0;
-
       font-size: 15px;
-
       font-weight: bold;
-
       background: #222;
-
-      border:
-        1px solid #444;
-
+      border: 1px solid #444;
       color: #777;
-
       opacity: 0;
-
-      transform:
-        scale(0.82);
-
-      transition:
-        0.2s;
-
+      transform: scale(0.82);
+      transition: 0.2s;
     }
 
-
     .order-badge.active {
-
       opacity: 1;
-
-      transform:
-        scale(1);
-
+      transform: scale(1);
       background: #eee;
-
       color: #111;
-
       border-color: #eee;
-
     }
 
-
-    body.manowar-mode
-    .order-badge.active {
-
+    body.manowar-mode .order-badge.active {
       background: #931010;
-
       border-color: #c52626;
-
       color: #fff;
-
     }
-
-
-    /*
-    ========================================
-    INFORMAÇÕES DA MÚSICA
-    ========================================
-    */
 
     .song-info {
-
       flex: 1;
-
       min-width: 0;
-
     }
-
 
     .song-title {
-
       font-size: 18px;
-
       font-weight: bold;
-
       line-height: 1.2;
-
     }
 
-
     .artist {
-
       margin-top: 5px;
-
       font-size: 13px;
-
       color: #777;
-
     }
 
-
-    body.manowar-mode
-    .artist {
-
+    body.manowar-mode .artist {
       color: #887f69;
-
     }
-
 
     .duration {
-
       font-family: monospace;
-
       font-size: 16px;
-
       color: #bbb;
-
       flex-shrink: 0;
-
     }
-
-
-    /*
-    ========================================
-    RODAPÉ
-    ========================================
-    */
 
     footer {
-
       max-width: 1050px;
-
-      margin:
-        0 auto 40px;
-
-      padding:
-        0 20px;
-
+      margin: 0 auto 40px;
+      padding: 0 20px;
       color: #555;
-
       font-size: 12px;
-
       text-align: center;
-
     }
 
+    /* ÁREA EXCLUSIVA DE IMPRESSÃO */
 
-    /*
-    ========================================
-    MOBILE
-    ========================================
-    */
+    #printArea {
+      display: none;
+    }
 
-    @media
-    (max-width: 650px) {
-
+    @media (max-width: 650px) {
       header {
-
         position: relative;
-
       }
-
 
       .top {
-
         display: block;
-
       }
-
 
       .brand img {
-
         width: 285px;
-
       }
-
 
       .counter {
-
         text-align: left;
-
         margin-top: 22px;
-
       }
-
 
       #totalTime {
-
         font-size: 30px;
-
       }
-
 
       .mode-buttons {
-
         grid-template-columns: 1fr;
-
       }
-
 
       .buttons {
-
         flex-direction: column;
-
       }
-
 
       .section-header {
-
         display: block;
-
       }
-
 
       .section-hint {
-
         text-align: left;
-
         margin-top: 7px;
-
       }
-
 
       .song {
-
         gap: 10px;
-
         padding: 14px;
-
       }
-
 
       .song-title {
-
         font-size: 16px;
-
       }
-
 
       .artist {
-
         font-size: 12px;
-
       }
-
 
       .order-badge {
-
         width: 29px;
-
         height: 29px;
-
         font-size: 13px;
-
       }
-
 
       .duration {
-
         font-size: 14px;
-
       }
-
 
       body.manowar-mode::before {
-
-        background-position:
-          center top;
-
+        background-position: center top;
       }
-
     }
 
+    /* IMPRESSÃO A4 */
+
+    @page {
+      size: A4;
+      margin: 15mm;
+    }
+
+    @media print {
+      html, body {
+        background: white !important;
+        color: black !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      body::before {
+        display: none !important;
+      }
+
+      header, main, footer {
+        display: none !important;
+      }
+
+      #printArea {
+        display: block !important;
+        width: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+      }
+
+      .print-logo {
+        display: block;
+        width: auto;
+        max-width: 145mm;
+        max-height: 48mm;
+        height: auto;
+        object-fit: contain;
+        margin: 0 auto 8mm;
+      }
+
+      .print-heading {
+        text-align: center;
+        font-size: 14pt;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-bottom: 8mm;
+      }
+
+      .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11pt;
+      }
+
+      .print-table th {
+        text-align: left;
+        border-bottom: 2px solid #222;
+        padding: 7px 5px;
+      }
+
+      .print-table td {
+        border-bottom: 1px solid #ddd;
+        padding: 7px 5px;
+      }
+
+      .print-table tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .print-number {
+        width: 10%;
+        text-align: center;
+      }
+
+      .print-duration {
+        width: 18%;
+        text-align: right !important;
+        white-space: nowrap;
+      }
+
+      .print-total {
+        margin-top: 10mm;
+        padding-top: 4mm;
+        border-top: 2px solid black;
+        text-align: right;
+        font-size: 14pt;
+        font-weight: bold;
+        break-inside: avoid;
+      }
+
+      .print-count {
+        margin-top: 4mm;
+        text-align: right;
+        font-size: 10pt;
+        color: #444;
+      }
+    }
   </style>
-
 </head>
-
-
 
 <body>
 
-
-
 <header>
-
   <div class="header-content">
 
-
     <div class="top">
-
-
       <div class="brand">
-
         <img
           src="oldskull-logo.png"
           alt="Oldsküll Heavy Metal Tribute Band"
@@ -898,36 +528,20 @@
         <p id="modeSubtitle">
           Setlist Builder • Covers
         </p>
-
       </div>
-
 
       <div class="counter">
-
-        <div id="trackCount">
-          0 DE 26 FAIXAS
-        </div>
-
-        <div id="totalTime">
-          0h 00m 00s
-        </div>
-
+        <div id="trackCount">0 DE 26 FAIXAS</div>
+        <div id="totalTime">0h 00m 00s</div>
       </div>
-
-
     </div>
 
-
-
     <div class="mode-area">
-
       <div class="mode-label">
         ESCOLHA O REPERTÓRIO
       </div>
 
-
       <div class="mode-buttons">
-
         <button
           id="coversModeButton"
           class="mode-button active"
@@ -936,7 +550,6 @@
           🎸 OLDSKÜLL — COVERS
         </button>
 
-
         <button
           id="manowarModeButton"
           class="mode-button"
@@ -944,22 +557,16 @@
         >
           ⚔️ OLDSKÜLL PLAYS MANOWAR
         </button>
-
       </div>
-
     </div>
 
-
-
     <div class="buttons">
-
       <button
         class="action-button"
         onclick="clearSetlist()"
       >
         🗑 Limpar
       </button>
-
 
       <button
         id="copyButton"
@@ -969,56 +576,40 @@
         📋 Copiar Setlist
       </button>
 
+      <button
+        class="action-button"
+        onclick="printSetlist()"
+      >
+        🖨 Imprimir Setlist
+      </button>
     </div>
 
-
   </div>
-
 </header>
 
-
-
 <main>
-
-
   <div class="section-header">
-
-    <div
-      id="sectionTitle"
-      class="section-title"
-    >
+    <div id="sectionTitle" class="section-title">
       OLDSKÜLL — COVERS
     </div>
 
-
     <div class="section-hint">
-
-      Selecione na ordem
-      em que deseja tocar.
-
+      Selecione na ordem em que deseja tocar.
     </div>
-
   </div>
 
-
   <div id="songList"></div>
-
-
 </main>
 
-
-
 <footer>
-
   Oldsküll Setlist Builder
   • ordem definida pela sequência dos cliques
-
 </footer>
 
-
+<!-- CONTEÚDO QUE APARECE APENAS NA IMPRESSÃO -->
+<div id="printArea"></div>
 
 <script>
-
 
 /*
 ========================================
@@ -1027,321 +618,137 @@ REPERTÓRIO — COVERS
 */
 
 const coversSongs = [
-
   {
-    title:
-      "The Hellion / Electric Eye",
-
-    artist:
-      "Judas Priest",
-
-    duration:
-      "4:21"
+    title: "The Hellion / Electric Eye",
+    artist: "Judas Priest",
+    duration: "4:21"
   },
-
-
   {
-    title:
-      "Bark at the Moon",
-
-    artist:
-      "Ozzy Osbourne",
-
-    duration:
-      "4:18"
+    title: "Bark at the Moon",
+    artist: "Ozzy Osbourne",
+    duration: "4:18"
   },
-
-
   {
-    title:
-      "Children of the Grave",
-
-    artist:
-      "Black Sabbath / Ozzy Osbourne",
-
-    duration:
-      "5:59"
+    title: "Children of the Grave",
+    artist: "Black Sabbath / Ozzy Osbourne",
+    duration: "5:59"
   },
-
-
   {
-    title:
-      "Caught Somewhere in Time",
-
-    artist:
-      "Iron Maiden",
-
-    duration:
-      "7:28"
+    title: "Caught Somewhere in Time",
+    artist: "Iron Maiden",
+    duration: "7:28"
   },
-
-
   {
-    title:
-      "Eagle Fly Free",
-
-    artist:
-      "Helloween",
-
-    duration:
-      "5:09"
+    title: "Eagle Fly Free",
+    artist: "Helloween",
+    duration: "5:09"
   },
-
-
   {
-    title:
-      "March of Time",
-
-    artist:
-      "Helloween",
-
-    duration:
-      "5:16"
+    title: "March of Time",
+    artist: "Helloween",
+    duration: "5:16"
   },
-
-
   {
-    title:
-      "Queen of the Reich",
-
-    artist:
-      "Queensrÿche",
-
-    duration:
-      "4:25"
+    title: "Queen of the Reich",
+    artist: "Queensrÿche",
+    duration: "4:25"
   },
-
-
   {
-    title:
-      "Battle Hymn",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "6:57"
+    title: "Battle Hymn",
+    artist: "Manowar",
+    duration: "6:57"
   },
-
-
   {
-    title:
-      "Hail and Kill",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "5:58"
+    title: "Hail and Kill",
+    artist: "Manowar",
+    duration: "5:58"
   },
-
-
   {
-    title:
-      "Thundersteel",
-
-    artist:
-      "Riot",
-
-    duration:
-      "3:51"
+    title: "Thundersteel",
+    artist: "Riot",
+    duration: "3:51"
   },
-
-
   {
-    title:
-      "Battle Angels",
-
-    artist:
-      "Sanctuary",
-
-    duration:
-      "4:52"
+    title: "Battle Angels",
+    artist: "Sanctuary",
+    duration: "4:52"
   },
-
-
   {
-    title:
-      "Killers",
-
-    artist:
-      "Iron Maiden",
-
-    duration:
-      "5:02"
+    title: "Killers",
+    artist: "Iron Maiden",
+    duration: "5:02"
   },
-
-
   {
-    title:
-      "Painkiller",
-
-    artist:
-      "Judas Priest",
-
-    duration:
-      "6:06"
+    title: "Painkiller",
+    artist: "Judas Priest",
+    duration: "6:06"
   },
-
-
   {
-    title:
-      "Egypt",
-
-    artist:
-      "Mercyful Fate",
-
-    duration:
-      "4:53"
+    title: "Egypt",
+    artist: "Mercyful Fate",
+    duration: "4:53"
   },
-
-
   {
-    title:
-      "A Mansion in Darkness",
-
-    artist:
-      "King Diamond",
-
-    duration:
-      "4:35"
+    title: "A Mansion in Darkness",
+    artist: "King Diamond",
+    duration: "4:35"
   },
-
-
   {
-    title:
-      "Dead Skin Mask",
-
-    artist:
-      "Slayer",
-
-    duration:
-      "5:21"
+    title: "Dead Skin Mask",
+    artist: "Slayer",
+    duration: "5:21"
   },
-
-
   {
-    title:
-      "Holy Wars... The Punishment Due",
-
-    artist:
-      "Megadeth",
-
-    duration:
-      "6:33"
+    title: "Holy Wars... The Punishment Due",
+    artist: "Megadeth",
+    duration: "6:33"
   },
-
-
   {
-    title:
-      "Master of Puppets",
-
-    artist:
-      "Metallica",
-
-    duration:
-      "8:36"
+    title: "Master of Puppets",
+    artist: "Metallica",
+    duration: "8:36"
   },
-
-
   {
-    title:
-      "Slave to the Grind",
-
-    artist:
-      "Skid Row",
-
-    duration:
-      "3:29"
+    title: "Slave to the Grind",
+    artist: "Skid Row",
+    duration: "3:29"
   },
-
-
   {
-    title:
-      "Nightrain",
-
-    artist:
-      "Guns N' Roses",
-
-    duration:
-      "5:19"
+    title: "Nightrain",
+    artist: "Guns N' Roses",
+    duration: "5:19"
   },
-
-
   {
-    title:
-      "It's So Easy",
-
-    artist:
-      "Guns N' Roses",
-
-    duration:
-      "3:23"
+    title: "It's So Easy",
+    artist: "Guns N' Roses",
+    duration: "3:23"
   },
-
-
   {
-    title:
-      "Wild Child",
-
-    artist:
-      "W.A.S.P.",
-
-    duration:
-      "5:13"
+    title: "Wild Child",
+    artist: "W.A.S.P.",
+    duration: "5:13"
   },
-
-
   {
-    title:
-      "L.O.V.E. Machine",
-
-    artist:
-      "W.A.S.P.",
-
-    duration:
-      "3:52"
+    title: "L.O.V.E. Machine",
+    artist: "W.A.S.P.",
+    duration: "3:52"
   },
-
-
   {
-    title:
-      "Killed by Death",
-
-    artist:
-      "Motörhead",
-
-    duration:
-      "4:39"
+    title: "Killed by Death",
+    artist: "Motörhead",
+    duration: "4:39"
   },
-
-
   {
-    title:
-      "Overkill",
-
-    artist:
-      "Motörhead",
-
-    duration:
-      "5:14"
+    title: "Overkill",
+    artist: "Motörhead",
+    duration: "5:14"
   },
-
-
   {
-    title:
-      "N.I.B.",
-
-    artist:
-      "Black Sabbath",
-
-    duration:
-      "6:07"
+    title: "N.I.B.",
+    artist: "Black Sabbath",
+    duration: "6:07"
   }
-
 ];
-
-
 
 /*
 ========================================
@@ -1350,338 +757,156 @@ REPERTÓRIO — MANOWAR
 */
 
 const manowarSongs = [
-
   {
-    title:
-      "Fighting the World",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:51"
+    title: "Fighting the World",
+    artist: "Manowar",
+    duration: "3:51"
   },
-
-
   {
-    title:
-      "The Gods Made Heavy Metal",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "6:04"
+    title: "The Gods Made Heavy Metal",
+    artist: "Manowar",
+    duration: "6:04"
   },
-
-
   {
-    title:
-      "Kings of Metal",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:44"
+    title: "Kings of Metal",
+    artist: "Manowar",
+    duration: "3:44"
   },
-
-
   {
-    title:
-      "Kingdom Come",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:57"
+    title: "Kingdom Come",
+    artist: "Manowar",
+    duration: "3:57"
   },
-
-
   {
-    title:
-      "Wheels of Fire",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "4:11"
+    title: "Wheels of Fire",
+    artist: "Manowar",
+    duration: "4:11"
   },
-
-
   {
-    title:
-      "Battle Hymn",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "6:59"
+    title: "Battle Hymn",
+    artist: "Manowar",
+    duration: "6:59"
   },
-
-
   {
-    title:
-      "Brothers of Metal (Part 1)",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:55"
+    title: "Brothers of Metal (Part 1)",
+    artist: "Manowar",
+    duration: "3:55"
   },
-
-
   {
-    title:
-      "Metal Warriors",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:55"
+    title: "Metal Warriors",
+    artist: "Manowar",
+    duration: "3:55"
   },
-
-
   {
-    title:
-      "Hail and Kill",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "5:58"
+    title: "Hail and Kill",
+    artist: "Manowar",
+    duration: "5:58"
   },
-
-
   {
-    title:
-      "Heart of Steel",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "5:11"
+    title: "Heart of Steel",
+    artist: "Manowar",
+    duration: "5:11"
   },
-
-
   {
-    title:
-      "Holy War",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "4:45"
+    title: "Holy War",
+    artist: "Manowar",
+    duration: "4:45"
   },
-
-
   {
-    title:
-      "Carry On",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "4:13"
+    title: "Carry On",
+    artist: "Manowar",
+    duration: "4:13"
   },
-
-
   {
-    title:
-      "Kill with Power",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:58"
+    title: "Kill with Power",
+    artist: "Manowar",
+    duration: "3:58"
   },
-
-
   {
-    title:
-      "Blood of the Kings",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "7:30"
+    title: "Blood of the Kings",
+    artist: "Manowar",
+    duration: "7:30"
   },
-
-
   {
-    title:
-      "Blood of My Enemies",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "4:16"
+    title: "Blood of My Enemies",
+    artist: "Manowar",
+    duration: "4:16"
   },
-
-
   {
-    title:
-      "Manowar",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "3:37"
+    title: "Manowar",
+    artist: "Manowar",
+    duration: "3:37"
   },
-
-
   {
-    title:
-      "Black Wind, Fire and Steel",
-
-    artist:
-      "Manowar",
-
-    duration:
-      "5:16"
+    title: "Black Wind, Fire and Steel",
+    artist: "Manowar",
+    duration: "5:16"
+  },
+  {
+    title: "The Power of Thy Sword",
+    artist: "Manowar",
+    duration: "7:50"
   }
-
 ];
 
-
-
 /*
 ========================================
-ESTADO DO SISTEMA
+ESTADO DOS DOIS REPERTÓRIOS
 ========================================
 */
 
-let currentMode =
-  "covers";
-
+let currentMode = "covers";
 
 const selectionState = {
-
   covers: [],
-
   manowar: []
-
 };
 
-
-
-/*
-========================================
-RETORNA O REPERTÓRIO ATUAL
-========================================
-*/
-
 function getCurrentSongs() {
-
-  if (
-    currentMode ===
-    "manowar"
-  ) {
-
-    return manowarSongs;
-
-  }
-
-
-  return coversSongs;
-
+  return currentMode === "manowar"
+    ? manowarSongs
+    : coversSongs;
 }
-
-
 
 function getCurrentSelection() {
-
-  return selectionState[
-    currentMode
-  ];
-
+  return selectionState[currentMode];
 }
-
-
 
 /*
 ========================================
-CONVERSÃO DE TEMPO
+CÁLCULO DE TEMPO
 ========================================
 */
 
 function timeToSeconds(time) {
-
-  const parts =
-    time.split(":");
-
+  const parts = time.split(":");
 
   return (
     Number(parts[0]) * 60 +
     Number(parts[1])
   );
-
 }
 
-
-
-/*
-========================================
-FORMATAÇÃO DO TEMPO
-========================================
-*/
-
-function formatTime(
-  totalSeconds
-) {
-
-  const hours =
-    Math.floor(
-      totalSeconds / 3600
-    );
-
-
-  const minutes =
-    Math.floor(
-      (
-        totalSeconds %
-        3600
-      ) / 60
-    );
-
-
-  const seconds =
-    totalSeconds % 60;
-
+function formatTime(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
   return (
-    hours +
-    "h " +
-    String(minutes)
-      .padStart(
-        2,
-        "0"
-      ) +
-    "m " +
-    String(seconds)
-      .padStart(
-        2,
-        "0"
-      ) +
-    "s"
+    hours + "h " +
+    String(minutes).padStart(2, "0") + "m " +
+    String(seconds).padStart(2, "0") + "s"
   );
-
 }
 
+function getTotalSeconds() {
+  const songs = getCurrentSongs();
+  const selection = getCurrentSelection();
 
+  return selection.reduce((total, index) => {
+    return total + timeToSeconds(songs[index].duration);
+  }, 0);
+}
 
 /*
 ========================================
@@ -1690,386 +915,162 @@ TROCA DE REPERTÓRIO
 */
 
 function switchMode(mode) {
+  if (mode !== "covers" && mode !== "manowar") {
+    return;
+  }
 
   currentMode = mode;
 
+  const isManowar = mode === "manowar";
 
-  const coversButton =
-    document.getElementById(
-      "coversModeButton"
-    );
+  document.body.classList.toggle(
+    "manowar-mode",
+    isManowar
+  );
 
+  document.getElementById("coversModeButton")
+    .classList.toggle("active", !isManowar);
 
-  const manowarButton =
-    document.getElementById(
-      "manowarModeButton"
-    );
+  document.getElementById("manowarModeButton")
+    .classList.toggle("active", isManowar);
 
+  document.getElementById("modeSubtitle").textContent =
+    isManowar
+      ? "Setlist Builder • Plays Manowar"
+      : "Setlist Builder • Covers";
 
-  const subtitle =
-    document.getElementById(
-      "modeSubtitle"
-    );
-
-
-  const sectionTitle =
-    document.getElementById(
-      "sectionTitle"
-    );
-
-
-  coversButton.classList
-    .remove("active");
-
-
-  manowarButton.classList
-    .remove("active");
-
-
-  if (
-    mode ===
-    "manowar"
-  ) {
-
-    document.body
-      .classList
-      .add(
-        "manowar-mode"
-      );
-
-
-    manowarButton
-      .classList
-      .add("active");
-
-
-    subtitle.textContent =
-      "Setlist Builder • Plays Manowar";
-
-
-    sectionTitle.textContent =
-      "OLDSKÜLL PLAYS MANOWAR";
-
-  }
-
-
-  else {
-
-    document.body
-      .classList
-      .remove(
-        "manowar-mode"
-      );
-
-
-    coversButton
-      .classList
-      .add("active");
-
-
-    subtitle.textContent =
-      "Setlist Builder • Covers";
-
-
-    sectionTitle.textContent =
-      "OLDSKÜLL — COVERS";
-
-  }
-
+  document.getElementById("sectionTitle").textContent =
+    isManowar
+      ? "OLDSKÜLL PLAYS MANOWAR"
+      : "OLDSKÜLL — COVERS";
 
   renderSongs();
-
   updateTotal();
-
 }
-
-
 
 /*
 ========================================
-CRIA A LISTA DE MÚSICAS
+RENDERIZAÇÃO DAS MÚSICAS
 ========================================
 */
 
 function renderSongs() {
-
-  const songs =
-    getCurrentSongs();
-
-
-  const selection =
-    getCurrentSelection();
-
-
-  const list =
-    document.getElementById(
-      "songList"
-    );
-
+  const songs = getCurrentSongs();
+  const selection = getCurrentSelection();
+  const list = document.getElementById("songList");
 
   list.innerHTML = "";
 
+  songs.forEach((song, index) => {
+    const item = document.createElement("label");
+    item.className = "song";
 
-  songs.forEach(
-    (
-      song,
-      index
-    ) => {
+    const position = selection.indexOf(index);
+    const isSelected = position !== -1;
 
-
-      const item =
-        document.createElement(
-          "label"
-        );
-
-
-      item.className =
-        "song";
-
-
-      const isSelected =
-        selection.includes(
-          index
-        );
-
-
-      const position =
-        selection.indexOf(
-          index
-        );
-
-
-      if (isSelected) {
-
-        item.classList
-          .add(
-            "selected"
-          );
-
-      }
-
-
-      item.innerHTML = `
-
-        <input
-          type="checkbox"
-
-          data-index="${index}"
-
-          ${
-            isSelected
-              ? "checked"
-              : ""
-          }
-
-          onchange="handleSelection(this)"
-        >
-
-
-        <span
-          class="order-badge
-          ${
-            isSelected
-              ? "active"
-              : ""
-          }"
-
-          data-order="${index}"
-        >
-
-          ${
-            isSelected
-              ? position + 1
-              : ""
-          }
-
-        </span>
-
-
-        <div
-          class="song-info"
-        >
-
-          <div
-            class="song-title"
-          >
-
-            ${song.title}
-
-          </div>
-
-
-          <div
-            class="artist"
-          >
-
-            ${song.artist}
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="duration"
-        >
-
-          ${song.duration}
-
-        </div>
-
-      `;
-
-
-      list.appendChild(
-        item
-      );
-
+    if (isSelected) {
+      item.classList.add("selected");
     }
-  );
 
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.dataset.index = index;
+    checkbox.checked = isSelected;
+
+    checkbox.addEventListener("change", function() {
+      handleSelection(this);
+    });
+
+    const badge = document.createElement("span");
+    badge.className = "order-badge";
+
+    if (isSelected) {
+      badge.classList.add("active");
+      badge.textContent = position + 1;
+    }
+
+    const info = document.createElement("div");
+    info.className = "song-info";
+
+    const title = document.createElement("div");
+    title.className = "song-title";
+    title.textContent = song.title;
+
+    const artist = document.createElement("div");
+    artist.className = "artist";
+    artist.textContent = song.artist;
+
+    info.appendChild(title);
+    info.appendChild(artist);
+
+    const duration = document.createElement("div");
+    duration.className = "duration";
+    duration.textContent = song.duration;
+
+    item.appendChild(checkbox);
+    item.appendChild(badge);
+    item.appendChild(info);
+    item.appendChild(duration);
+
+    list.appendChild(item);
+  });
 }
-
-
 
 /*
 ========================================
-SELEÇÃO DAS MÚSICAS
+SELEÇÃO NA ORDEM DOS CLIQUES
 ========================================
 */
 
 function handleSelection(box) {
-
-  const index =
-    Number(
-      box.dataset.index
-    );
-
-
-  let selection =
-    getCurrentSelection();
-
+  const index = Number(box.dataset.index);
+  let selection = getCurrentSelection();
 
   if (box.checked) {
-
-    if (
-      !selection.includes(
-        index
-      )
-    ) {
-
+    if (!selection.includes(index)) {
       selection.push(index);
-
     }
-
+  } else {
+    selectionState[currentMode] =
+      selection.filter(item => item !== index);
   }
-
-
-  else {
-
-    selection =
-      selection.filter(
-        item =>
-          item !== index
-      );
-
-
-    selectionState[
-      currentMode
-    ] = selection;
-
-  }
-
 
   renderSongs();
-
   updateTotal();
-
 }
-
-
 
 /*
 ========================================
-ATUALIZA CONTADOR E TEMPO
+CONTADOR E TEMPO TOTAL
 ========================================
 */
 
 function updateTotal() {
+  const songs = getCurrentSongs();
+  const selection = getCurrentSelection();
 
-  const songs =
-    getCurrentSongs();
+  document.getElementById("trackCount").textContent =
+    selection.length +
+    " DE " +
+    songs.length +
+    " FAIXAS";
 
-
-  const selection =
-    getCurrentSelection();
-
-
-  let totalSeconds = 0;
-
-
-  selection.forEach(
-    index => {
-
-      totalSeconds +=
-        timeToSeconds(
-          songs[index]
-            .duration
-        );
-
-    }
-  );
-
-
-  document
-    .getElementById(
-      "trackCount"
-    )
-    .textContent =
-
-      selection.length +
-
-      " DE " +
-
-      songs.length +
-
-      " FAIXAS";
-
-
-  document
-    .getElementById(
-      "totalTime"
-    )
-    .textContent =
-
-      formatTime(
-        totalSeconds
-      );
-
+  document.getElementById("totalTime").textContent =
+    formatTime(getTotalSeconds());
 }
-
-
 
 /*
 ========================================
-LIMPAR REPERTÓRIO ATUAL
+LIMPAR APENAS O REPERTÓRIO ATUAL
 ========================================
 */
 
 function clearSetlist() {
-
-  selectionState[
-    currentMode
-  ] = [];
-
+  selectionState[currentMode] = [];
 
   renderSongs();
-
   updateTotal();
-
 }
-
-
 
 /*
 ========================================
@@ -2078,161 +1079,170 @@ COPIAR SETLIST
 */
 
 function copySetlist() {
+  const songs = getCurrentSongs();
+  const selection = getCurrentSelection();
 
-  const songs =
-    getCurrentSongs();
-
-
-  const selection =
-    getCurrentSelection();
-
-
-  if (
-    selection.length === 0
-  ) {
-
-    alert(
-      "Selecione pelo menos uma música."
-    );
-
-
+  if (selection.length === 0) {
+    alert("Selecione pelo menos uma música.");
     return;
-
   }
 
+  let text = currentMode === "manowar"
+    ? "OLDSKÜLL PLAYS MANOWAR\n\n"
+    : "OLDSKÜLL — SETLIST\n\n";
 
-
-  let totalSeconds = 0;
-
-
-  let text = "";
-
-
-  if (
-    currentMode ===
-    "manowar"
-  ) {
+  selection.forEach((songIndex, position) => {
+    const song = songs[songIndex];
 
     text +=
-      "OLDSKÜLL PLAYS MANOWAR\n\n";
-
-  }
-
-
-  else {
-
-    text +=
-      "OLDSKÜLL — SETLIST\n\n";
-
-  }
-
-
-
-  selection.forEach(
-    (
-      songIndex,
-      position
-    ) => {
-
-
-      const song =
-        songs[
-          songIndex
-        ];
-
-
-      text +=
-
-        (
-          position + 1
-        ) +
-
-        ". " +
-
-        song.title +
-
-        " — " +
-
-        song.duration +
-
-        "\n";
-
-
-      totalSeconds +=
-
-        timeToSeconds(
-          song.duration
-        );
-
-    }
-  );
-
-
+      (position + 1) +
+      ". " +
+      song.title +
+      " — " +
+      song.duration +
+      "\n";
+  });
 
   text +=
-
     "\nTEMPO TOTAL: " +
+    formatTime(getTotalSeconds());
 
-    formatTime(
-      totalSeconds
-    );
-
-
-
-  navigator
-    .clipboard
-    .writeText(text)
-
+  navigator.clipboard.writeText(text)
     .then(() => {
+      const button = document.getElementById("copyButton");
+      const originalText = button.textContent;
 
+      button.textContent = "✓ Setlist copiado!";
 
-      const button =
-
-        document
-          .getElementById(
-            "copyButton"
-          );
-
-
-      const originalText =
-
-        button
-          .textContent;
-
-
-      button.textContent =
-
-        "✓ Setlist copiado!";
-
-
-      setTimeout(
-        () => {
-
-          button
-            .textContent =
-
-              originalText;
-
-        },
-
-        1500
-
-      );
-
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 1500);
     })
-
-
     .catch(() => {
-
-      alert(
-        "Não foi possível copiar automaticamente."
-      );
-
+      alert("Não foi possível copiar automaticamente.");
     });
-
 }
 
+/*
+========================================
+IMPRESSÃO COM LOGOTIPO CORRETO
+========================================
+*/
 
+function printSetlist() {
+  const songs = getCurrentSongs();
+  const selection = getCurrentSelection();
+
+  if (selection.length === 0) {
+    alert("Selecione pelo menos uma música antes de imprimir.");
+    return;
+  }
+
+  const isManowar = currentMode === "manowar";
+
+  const logo = isManowar
+    ? "oldskull-plays-manowar.jpeg"
+    : "oldskull-logo.png";
+
+  const heading = isManowar
+    ? "OLDSKÜLL PLAYS MANOWAR"
+    : "OLDSKÜLL — SETLIST";
+
+  const printArea = document.getElementById("printArea");
+
+  // Limpa a impressão anterior.
+  printArea.innerHTML = "";
+
+  const logoElement = document.createElement("img");
+  logoElement.className = "print-logo";
+  logoElement.src = logo;
+  logoElement.alt = heading;
+
+  const headingElement = document.createElement("div");
+  headingElement.className = "print-heading";
+  headingElement.textContent = heading;
+
+  const table = document.createElement("table");
+  table.className = "print-table";
+
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  ["Nº", "MÚSICA", "DURAÇÃO"].forEach((label, index) => {
+    const th = document.createElement("th");
+    th.textContent = label;
+
+    if (index === 0) {
+      th.className = "print-number";
+    }
+
+    if (index === 2) {
+      th.className = "print-duration";
+    }
+
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
+  selection.forEach((songIndex, position) => {
+    const song = songs[songIndex];
+    const row = document.createElement("tr");
+
+    const numberCell = document.createElement("td");
+    numberCell.className = "print-number";
+    numberCell.textContent = position + 1;
+
+    const titleCell = document.createElement("td");
+    titleCell.textContent = song.title;
+
+    const durationCell = document.createElement("td");
+    durationCell.className = "print-duration";
+    durationCell.textContent = song.duration;
+
+    row.appendChild(numberCell);
+    row.appendChild(titleCell);
+    row.appendChild(durationCell);
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+
+  const total = document.createElement("div");
+  total.className = "print-total";
+  total.textContent =
+    "TEMPO TOTAL: " +
+    formatTime(getTotalSeconds());
+
+  const count = document.createElement("div");
+  count.className = "print-count";
+  count.textContent =
+    selection.length +
+    (selection.length === 1 ? " música selecionada" : " músicas selecionadas");
+
+  printArea.appendChild(logoElement);
+  printArea.appendChild(headingElement);
+  printArea.appendChild(table);
+  printArea.appendChild(total);
+  printArea.appendChild(count);
+
+  // Aguarda o carregamento do logotipo.
+  if (logoElement.complete) {
+    window.print();
+  } else {
+    logoElement.onload = () => window.print();
+
+    logoElement.onerror = () => {
+      alert(
+        "O logotipo não foi encontrado. Confira o nome do arquivo no GitHub."
+      );
+    };
+  }
+}
 
 /*
 ========================================
@@ -2240,16 +1250,9 @@ INICIALIZAÇÃO
 ========================================
 */
 
-switchMode(
-  "covers"
-);
-
-
+switchMode("covers");
 
 </script>
 
-
-
 </body>
-
 </html>
